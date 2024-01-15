@@ -1,4 +1,8 @@
 import { useState } from 'react'
+import Header from './components/Header'
+import { Filter } from './components/Filter'
+import NewContact from './components/NewContact'
+import Persons from './components/Persons'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -11,17 +15,6 @@ const App = () => {
   const [newNum, setNewNum] = useState("")
   const [filter, setFilter] = useState("")
   
-  const handleNameChange = (event) => {
-    setNewName(event.target.value)
-  }
-
-  const handleNumChange = (event) => {
-    setNewNum(event.target.value) 
-  }
-
-  const handleFilterChange = (event) => {
-    setFilter(event.target.value)
-  }
 
   const addName = (event) => {
     event.preventDefault()
@@ -45,26 +38,17 @@ const App = () => {
 
   return (
     <div>
-      <h2>Phonebook</h2>
-      <form>
-        filter shown with<input value={filter} onChange={handleFilterChange} />
-      </form>
-      <h2>add a new</h2>
-      <form onSubmit={addName}>
-        <div>
-          name: <input value={newName} onChange={handleNameChange} />
-        </div>
-        <div>
-          number: <input value={newNum} onChange={handleNumChange}/>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      {persons.filter(x => x.name.includes(filter)).map(obj => 
-        <p key={obj.name}>{obj.name} {obj.number}</p>   
-      )}
+      <Header title={"Phonebook"} />
+      <Filter filter={filter} setFilter={setFilter} />
+      <Header title={"add a new"} />
+      <NewContact 
+        newName={newName} 
+        setNewName={setNewName} 
+        newNum={newNum} 
+        setNewNum={setNewNum} 
+        addName={addName} />
+      <Header title={"Numbers"} />
+      <Persons persons={persons} filter={filter} />
     </div>
   )
 
