@@ -1,4 +1,4 @@
-const Filter = (props) => {
+const FilterComp = (props) => {
   const handleFilterChange = (event) => {
     props.setFilter(event.target.value)
   }
@@ -10,4 +10,4 @@ const Filter = (props) => {
   )
 }
 
-export { Filter }
+export default FilterComp

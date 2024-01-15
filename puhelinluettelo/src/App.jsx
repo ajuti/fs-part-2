@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import Header from './components/Header'
-import { Filter } from './components/Filter'
+import FilterComp from './components/FilterComp'
 import NewContact from './components/NewContact'
 import Persons from './components/Persons'
 
@@ -39,7 +39,7 @@ const App = () => {
   return (
     <div>
       <Header title={"Phonebook"} />
-      <Filter filter={filter} setFilter={setFilter} />
+      <FilterComp filter={filter} setFilter={setFilter} />
       <Header title={"add a new"} />
       <NewContact 
         newName={newName} 
