@@ -4,6 +4,7 @@ import FilterComp from './components/FilterComp'
 import NewContact from './components/NewContact'
 import Persons from './components/Persons'
 import axios from 'axios'
+import personService from "./services/persons.js"
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
@@ -13,11 +14,11 @@ const App = () => {
 
   const jsonHook = () => {
     console.log("retrieving persons")
-    axios
-      .get("http://localhost:3001/persons")
-      .then(response => {
+    personService
+      .getAll()
+      .then(initialList => {
         console.log("promise fulfilled")
-        setPersons(response.data)
+        setPersons(initialList)
       })
   }
 
@@ -38,7 +39,13 @@ const App = () => {
       number: newNum,
     }
 
-    setPersons(persons.concat(nameObj))
+    personService
+      .create(nameObj)
+      .then(newContact => {
+        console.log(newContact)
+        setPersons(persons.concat(newContact))
+      })
+
     setNewName("")
     setNewNum("")
   }
