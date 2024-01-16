@@ -3,7 +3,6 @@ import Header from './components/Header'
 import FilterComp from './components/FilterComp'
 import NewContact from './components/NewContact'
 import Persons from './components/Persons'
-import axios from 'axios'
 import personService from "./services/persons.js"
 
 const App = () => {
@@ -24,10 +23,25 @@ const App = () => {
 
   useEffect(jsonHook, []) // executes after each render
 
-  const addName = (event) => {
+  const handleUpdateNum = () => {
+    const existingPerson = [...persons].find(x => x.name === newName)
+    const modifiedPerson = {...existingPerson, number: newNum}
+    personService
+      .update(modifiedPerson)
+      .then(updatedGuy => {
+        console.log(`updating state`)
+        setPersons(persons.map(person => person.id !== updatedGuy.id ? person : updatedGuy))
+      })
+  }
+
+  const handleAddName = (event) => {
     event.preventDefault()
     if (persons.map(x => x.name).includes(newName)) {
-      alert(`${newName} is already added to the phonebook`)
+      if (window.confirm(`${newName} is already added to the phonebook. Replace the old number with a new one?`)) {
+        handleUpdateNum()
+      } else {
+        console.log("New number was not updated")
+      }
       return 
     }
     if (persons.map(x => x.number).includes(newNum)) {
@@ -50,6 +64,7 @@ const App = () => {
     setNewNum("")
   }
 
+
   return (
     <div>
       <Header title={"Phonebook"} />
@@ -60,9 +75,9 @@ const App = () => {
         setNewName={setNewName} 
         newNum={newNum} 
         setNewNum={setNewNum} 
-        addName={addName} />
+        addName={handleAddName} />
       <Header title={"Numbers"} />
-      <Persons persons={persons} filter={filter} />
+      <Persons persons={persons} filter={filter} setPersons={setPersons} />
     </div>
   )
 
