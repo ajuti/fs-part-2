@@ -7,7 +7,7 @@ import personService from "./services/persons.js"
 import Notification from './components/Notification.jsx'
 
 const App = () => {
-  const [persons, setPersons] = useState([]) 
+  const [persons, setPersons] = useState(null) 
   const [newName, setNewName] = useState('')
   const [newNum, setNewNum] = useState("")
   const [filter, setFilter] = useState("")
@@ -25,6 +25,10 @@ const App = () => {
   }
 
   useEffect(jsonHook, []) // executes after each render
+
+  if (!persons) {
+    return null
+  }
 
   const handleUpdateNum = () => {
     const existingPerson = [...persons].find(x => x.name === newName)
