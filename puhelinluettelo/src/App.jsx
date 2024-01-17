@@ -4,12 +4,15 @@ import FilterComp from './components/FilterComp'
 import NewContact from './components/NewContact'
 import Persons from './components/Persons'
 import personService from "./services/persons.js"
+import Notification from './components/Notification.jsx'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNum, setNewNum] = useState("")
   const [filter, setFilter] = useState("")
+  const [notiText, setNotiText] = useState(null)
+  const [showError, setShowError] = useState(false) 
 
   const jsonHook = () => {
     console.log("retrieving persons")
@@ -31,7 +34,45 @@ const App = () => {
       .then(updatedGuy => {
         console.log(`updating state`)
         setPersons(persons.map(person => person.id !== updatedGuy.id ? person : updatedGuy))
+
+        setNotiText(`Updated the number of ${updatedGuy.name}`)
+        setTimeout(() => {
+          setNotiText(null)
+        }, 3000)
       })
+      .catch(error => {
+        setShowError(true)
+        setNotiText(`Information of ${modifiedPerson.name} has already been removed from server`)
+        setPersons(persons.filter(person => person.id !== modifiedPerson.id))
+
+        setTimeout(() => {
+          setNotiText(null)
+          setShowError(false)
+        }, 3000)
+      })
+    setNewName("")
+    setNewNum("")
+  }
+
+  const handleDestroyName = ({name, id}) => {
+    if (window.confirm(`Delete ${name}?`)) {
+      personService
+        .destroy(id)
+        .then(deleted => {
+          const newList = [...persons].filter(x => x.id !== deleted.id) 
+          setPersons(newList)
+
+          setNotiText(`Deleted ${name}`)
+          setTimeout(() => {
+            setNotiText(null)
+          }, 3000)
+        })
+        .catch(error => {
+          console.log(`sumthng fcked up: ${error}`)
+        })
+    } else {
+      console.log("User didn't want to delete the contact")
+    }
   }
 
   const handleAddName = (event) => {
@@ -58,16 +99,24 @@ const App = () => {
       .then(newContact => {
         console.log(newContact)
         setPersons(persons.concat(newContact))
+
+        setNotiText(`Added ${nameObj.name}`)
+        setTimeout(() => {
+          setNotiText(null)
+        }, 3000)
       })
 
     setNewName("")
     setNewNum("")
+
+
   }
 
 
   return (
     <div>
       <Header title={"Phonebook"} />
+      <Notification msg={notiText} error={showError} />
       <FilterComp filter={filter} setFilter={setFilter} />
       <Header title={"add a new"} />
       <NewContact 
@@ -77,7 +126,7 @@ const App = () => {
         setNewNum={setNewNum} 
         addName={handleAddName} />
       <Header title={"Numbers"} />
-      <Persons persons={persons} filter={filter} setPersons={setPersons} />
+      <Persons persons={persons} filter={filter} handler={handleDestroyName} />
     </div>
   )
 
