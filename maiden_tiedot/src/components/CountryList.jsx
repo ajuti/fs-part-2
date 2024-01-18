@@ -19,7 +19,6 @@ const CountryList = ({countries, setFiltered}) => {
       </ul>
     )
   } else if (countries.length === 1) {
-    console.log("im trying to render a single country", countries[0])
     return (
       <Country country={countries[0]} />
     )

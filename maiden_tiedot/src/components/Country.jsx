@@ -1,5 +1,8 @@
+import WeatherData from "./WeatherData"
+
 const Country = ({ country }) => {
-  console.log(country.languages)
+    const langs = (Object.values(country.languages))
+
     return (
       <>
         <h1>{country.name.common}</h1>
@@ -9,11 +12,12 @@ const Country = ({ country }) => {
         </p>
         <h4>languages:</h4>
         <ul>
-          {Object.values(country.languages).map(lang => {
-            <li>{lang}</li>
-          })}
+          {langs.map(lang =>
+            <li key={lang}>{lang}</li>
+          )}
         </ul>
         <img src={country.flags.png} />
+        <WeatherData country={country} />
       </>
     )
 }

@@ -7,20 +7,17 @@ const App = () => {
   const [filteredCountries, setFiltered] = useState([])
   const [filter, setFilter] = useState("")
 
-  useEffect(() => {
-    console.log("effect run")
 
+  useEffect(() => {
     axios
       .get("https://studies.cs.helsinki.fi/restcountries/api/all")
       .then(response => {
         setAllCountries(response.data)
-        setFiltered(response.data) // kysy
       })
   }, [])
 
   const handleInputChange = (event) => {
     const val = event.target.value.toLowerCase()
-    console.log(val)
     setFilter(val)
     setFiltered(
       allCountries.filter(country => country.name.common.toLowerCase().includes(val))
