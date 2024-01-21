@@ -18,7 +18,7 @@ const getAll = () => {
 const destroy = (id) => {
   const req = axios.delete(`${baseUrl}/${id}`)
   return req.then(response => {
-    console.log(`deleted contact with with ${id}`)
+    console.log(`deleted contact with with ${id}`, response)
     return response.data
   })
 }
